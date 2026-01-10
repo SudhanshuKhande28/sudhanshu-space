@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import sudhanshuAbout from "@/assets/sudhanshu-about.jpg";
 
 const AboutSection = () => {
   const ref = useRef(null);
@@ -18,9 +19,11 @@ const AboutSection = () => {
             className="relative"
           >
             <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-secondary">
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary flex items-center justify-center">
-                <span className="text-6xl">👨‍💻</span>
-              </div>
+              <img 
+                src={sudhanshuAbout} 
+                alt="Sudhanshu Khande" 
+                className="w-full h-full object-cover"
+              />
             </div>
             {/* Decorative element */}
             <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-primary rounded-2xl -z-10" />
