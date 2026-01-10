@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import sudhanshuPhoto from "@/assets/sudhanshu-photo.jpg";
 
 const HeroSection = () => {
   return (
@@ -82,10 +83,11 @@ const HeroSection = () => {
               {/* Photo container */}
               <div className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden bg-gradient-primary p-1">
                 <div className="w-full h-full rounded-full bg-secondary flex items-center justify-center overflow-hidden">
-                  {/* Replace this placeholder with your actual photo */}
-                  <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary flex items-center justify-center">
-                    <span className="text-8xl md:text-9xl">👨‍💻</span>
-                  </div>
+                  <img 
+                    src={sudhanshuPhoto} 
+                    alt="Sudhanshu Khande" 
+                    className="w-full h-full object-cover object-top"
+                  />
                 </div>
               </div>
 
