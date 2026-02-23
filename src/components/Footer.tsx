@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 
 const socialLinks = [
@@ -22,15 +23,20 @@ const Footer = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            {socialLinks.map((social) => (
-              <a
+            {socialLinks.map((social, i) => (
+              <motion.a
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.2, y: -3 }}
+                whileTap={{ scale: 0.9 }}
                 className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
               >
                 <social.icon className="w-5 h-5" />
-              </a>
+              </motion.a>
             ))}
           </div>
         </div>
