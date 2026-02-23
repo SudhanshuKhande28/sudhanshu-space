@@ -5,31 +5,25 @@ import { Briefcase, GraduationCap } from "lucide-react";
 
 const experiences = [
   {
-    title: "Senior Graphic Designer",
-    company: "Creative Studio",
-    period: "2022 - Present",
-    description: "Leading visual design for major brand campaigns and motion graphics projects.",
+    title: "Junior IT Engineer & Multimedia Designer",
+    company: "Creoverse Agency",
+    period: "Jan 2023 - Aug 2023",
+    description: "Worked at Creoverse Agency, a full-service creative and technology firm. Responsibilities included managing client websites, creating graphic content for digital campaigns, editing video advertisements, and providing technical support for design projects.",
   },
   {
-    title: "Video Editor",
-    company: "Media Productions",
-    period: "2020 - 2022",
-    description: "Edited commercials, documentaries, and social media content for various clients.",
-  },
-  {
-    title: "Junior Designer",
-    company: "Design Agency",
-    period: "2019 - 2020",
-    description: "Created print and digital designs for small to medium businesses.",
+    title: "Graphic Designer & Video Editor",
+    company: "Pixora Studio",
+    period: "Jun 2021 - Dec 2022",
+    description: "Worked as a creative designer at Pixora Studio, a digital media agency specializing in brand identity and social media content. Responsibilities included designing logos, creating social media posts, editing promotional videos, and collaborating with clients to deliver creative solutions.",
   },
 ];
 
 const education = [
   {
-    title: "Bachelor's in Visual Communication",
-    institution: "Art & Design University",
-    period: "2015 - 2019",
-    description: "Specialized in digital media and motion graphics.",
+    title: "B.E in Information Technology",
+    institution: "",
+    period: "2019 - 2023",
+    description: "",
   },
 ];
 
