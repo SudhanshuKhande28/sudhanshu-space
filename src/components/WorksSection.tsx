@@ -3,44 +3,63 @@ import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { ExternalLink, Play } from "lucide-react";
 
+import pulseFit from "@/assets/works/pulse-fit.png";
+import brewco from "@/assets/works/brewco.png";
+import urbanThreads from "@/assets/works/urban-threads.png";
+import foodieStop from "@/assets/works/foodie-stop.png";
+import zyvox from "@/assets/works/zyvox.png";
+import kidolearn from "@/assets/works/kidolearn.png";
+import nexflow from "@/assets/works/nexflow.png";
+import techNova from "@/assets/works/tech-nova.png";
+import wanderlust from "@/assets/works/wanderlust.png";
+
 const categories = ["All", "Branding", "Video", "UI/UX", "Motion"];
 
 const works = [
   {
-    title: "Brand Identity Design",
+    title: "Pulse Fit - Poster Design",
     category: "Branding",
-    image: "🎨",
-    color: "from-orange-500/20 to-red-500/20",
+    image: pulseFit,
   },
   {
-    title: "Product Commercial",
+    title: "BrewCo - Brand Identity",
+    category: "Branding",
+    image: brewco,
+  },
+  {
+    title: "Urban Threads - Social Media",
+    category: "Branding",
+    image: urbanThreads,
+  },
+  {
+    title: "Foodie Stop - Product Commercial",
     category: "Video",
-    image: "🎬",
-    color: "from-blue-500/20 to-purple-500/20",
+    image: foodieStop,
   },
   {
-    title: "Mobile App Design",
-    category: "UI/UX",
-    image: "📱",
-    color: "from-green-500/20 to-teal-500/20",
+    title: "Tech Nova - Promo Video",
+    category: "Video",
+    image: techNova,
   },
   {
-    title: "Logo Animation",
+    title: "WanderLust - YouTube Series",
+    category: "Video",
+    image: wanderlust,
+  },
+  {
+    title: "Zyvox - Logo Animation",
     category: "Motion",
-    image: "✨",
-    color: "from-pink-500/20 to-rose-500/20",
+    image: zyvox,
   },
   {
-    title: "Corporate Video",
-    category: "Video",
-    image: "🎥",
-    color: "from-indigo-500/20 to-blue-500/20",
-  },
-  {
-    title: "Website Redesign",
+    title: "NexFlow - Mobile App Design",
     category: "UI/UX",
-    image: "💻",
-    color: "from-yellow-500/20 to-orange-500/20",
+    image: nexflow,
+  },
+  {
+    title: "KidoLearn - Mobile App Design",
+    category: "UI/UX",
+    image: kidolearn,
   },
 ];
 
@@ -101,11 +120,11 @@ const WorksSection = () => {
               transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
               className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-secondary cursor-pointer"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${work.color} flex items-center justify-center`}>
-                <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
-                  {work.image}
-                </span>
-              </div>
+              <img
+                src={work.image}
+                alt={work.title}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
 
               {/* Overlay */}
               <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
