@@ -12,15 +12,15 @@ const experiences = [
   },
   {
     title: "Junior IT Engineer & Multimedia Designer",
-    company: "Creoverse Agency",
+    company: "Kreative Monks",
     period: "Jan 2023 - Aug 2023",
-    description: "Worked at Creoverse Agency, a full-service creative and technology firm. Responsibilities included managing client websites, creating graphic content for digital campaigns, editing video advertisements, and providing technical support for design projects.",
+    description: "Worked at Kreative Monks, a full-service creative and technology firm. Responsibilities included managing client websites, creating graphic content for digital campaigns, editing video advertisements, and providing technical support for design projects.",
   },
   {
     title: "Graphic Designer & Video Editor",
-    company: "Pixora Studio",
+    company: "Vizora Studio",
     period: "Jun 2021 - Dec 2022",
-    description: "Worked as a creative designer at Pixora Studio, a digital media agency specializing in brand identity and social media content. Responsibilities included designing logos, creating social media posts, editing promotional videos, and collaborating with clients to deliver creative solutions.",
+    description: "Worked as a creative designer at Vizora Studio, a digital media agency specializing in brand identity and social media content. Responsibilities included designing logos, creating social media posts, editing promotional videos, and collaborating with clients to deliver creative solutions.",
   },
 ];
 
