@@ -40,6 +40,25 @@ const ServicesSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.5, ease: "easeOut" as const },
+    },
+  };
+
   return (
     <section id="services" className="py-24 md:py-32">
       <div className="container mx-auto px-6" ref={ref}>
@@ -55,23 +74,31 @@ const ServicesSection = () => {
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, index) => (
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+        >
+          {services.map((service) => (
             <motion.div
               key={service.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-              className="group p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-card"
+              variants={cardVariants}
+              whileHover={{ y: -8, borderColor: "hsl(15 90% 60% / 0.5)" }}
+              className="group p-8 rounded-2xl bg-card border border-border transition-shadow duration-300 hover:shadow-card cursor-default"
             >
-              <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <motion.div
+                className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center mb-6"
+                whileHover={{ scale: 1.15, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
                 <service.icon className="w-7 h-7 text-primary-foreground" />
-              </div>
-              <h3 className="text-xl font-display font-bold mb-3">{service.title}</h3>
+              </motion.div>
+              <h3 className="text-xl font-display font-bold mb-3 group-hover:text-gradient transition-all duration-300">{service.title}</h3>
               <p className="text-muted-foreground leading-relaxed">{service.description}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

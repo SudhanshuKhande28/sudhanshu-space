@@ -7,6 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
+const contactInfo = [
+  { icon: Mail, label: "Email", value: "skhande0944@gmail.com" },
+  { icon: Phone, label: "Phone", value: "+91 9130157317" },
+  { icon: MapPin, label: "Location", value: "Pune, India" },
+];
+
 const ContactSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -15,7 +21,6 @@ const ContactSection = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate form submission
     setTimeout(() => {
       setIsSubmitting(false);
       toast.success("Message sent successfully! I'll get back to you soon.");
@@ -51,35 +56,27 @@ const ContactSection = () => {
             </p>
 
             <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium">skhande0944@gmail.com</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Phone</p>
-                  <p className="font-medium">+91 9130157317</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Location</p>
-                  <p className="font-medium">Pune, India</p>
-                </div>
-              </div>
+              {contactInfo.map((item, i) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.4 + i * 0.15 }}
+                  whileHover={{ x: 8 }}
+                  className="flex items-center gap-4 cursor-default"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center flex-shrink-0"
+                  >
+                    <item.icon className="w-5 h-5 text-primary-foreground" />
+                  </motion.div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">{item.label}</p>
+                    <p className="font-medium">{item.value}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
 
@@ -92,21 +89,21 @@ const ContactSection = () => {
             className="space-y-6"
           >
             <div className="grid sm:grid-cols-2 gap-6">
-              <div>
+              <motion.div whileFocus={{ scale: 1.01 }}>
                 <label className="block text-sm font-medium mb-2">Name</label>
                 <Input
                   placeholder="Your name"
                   required
-                  className="bg-background border-border focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-all duration-300"
                 />
-              </div>
+              </motion.div>
               <div>
                 <label className="block text-sm font-medium mb-2">Email</label>
                 <Input
                   type="email"
                   placeholder="your@email.com"
                   required
-                  className="bg-background border-border focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-all duration-300"
                 />
               </div>
             </div>
@@ -116,7 +113,7 @@ const ContactSection = () => {
               <Input
                 placeholder="Project inquiry"
                 required
-                className="bg-background border-border focus:border-primary"
+                className="bg-background border-border focus:border-primary transition-all duration-300"
               />
             </div>
 
@@ -126,25 +123,32 @@ const ContactSection = () => {
                 placeholder="Tell me about your project..."
                 rows={5}
                 required
-                className="bg-background border-border focus:border-primary resize-none"
+                className="bg-background border-border focus:border-primary resize-none transition-all duration-300"
               />
             </div>
 
-            <Button
-              type="submit"
-              size="lg"
-              disabled={isSubmitting}
-              className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow"
-            >
-              {isSubmitting ? (
-                "Sending..."
-              ) : (
-                <>
-                  Send Message
-                  <Send className="w-4 h-4 ml-2" />
-                </>
-              )}
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow"
+              >
+                {isSubmitting ? (
+                  <motion.span
+                    animate={{ opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    Sending...
+                  </motion.span>
+                ) : (
+                  <>
+                    Send Message
+                    <Send className="w-4 h-4 ml-2" />
+                  </>
+                )}
+              </Button>
+            </motion.div>
           </motion.form>
         </div>
       </div>
