@@ -5,6 +5,12 @@ import { Briefcase, GraduationCap } from "lucide-react";
 
 const experiences = [
   {
+    title: "Content Creator & Video Editor",
+    company: "The Focal Point (Self-owned)",
+    period: "2025 - Present",
+    description: "Running an independent Instagram creative channel focused on video edits and visual storytelling. Responsible for conceptualizing, shooting, editing, and publishing creative content consistently.",
+  },
+  {
     title: "Junior IT Engineer & Multimedia Designer",
     company: "Creoverse Agency",
     period: "Jan 2023 - Aug 2023",
