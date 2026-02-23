@@ -56,11 +56,11 @@ const AboutSection = () => {
                 <p className="text-muted-foreground text-sm mt-1">Years Experience</p>
               </div>
               <div>
-                <span className="text-3xl font-display font-bold text-gradient">100+</span>
+                <span className="text-3xl font-display font-bold text-gradient">50+</span>
                 <p className="text-muted-foreground text-sm mt-1">Projects Done</p>
               </div>
               <div>
-                <span className="text-3xl font-display font-bold text-gradient">50+</span>
+                <span className="text-3xl font-display font-bold text-gradient">30+</span>
                 <p className="text-muted-foreground text-sm mt-1">Happy Clients</p>
               </div>
             </div>

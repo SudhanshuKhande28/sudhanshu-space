@@ -34,12 +34,13 @@ const education = [
 ];
 
 const skills = [
-  { name: "Adobe Photoshop", level: 95 },
-  { name: "Adobe Premiere Pro", level: 90 },
-  { name: "After Effects", level: 85 },
-  { name: "Adobe Illustrator", level: 88 },
-  { name: "Figma", level: 82 },
-  { name: "DaVinci Resolve", level: 75 },
+  { name: "Adobe Photoshop", level: 82 },
+  { name: "Adobe Premiere Pro", level: 80 },
+  { name: "After Effects", level: 75 },
+  { name: "Adobe Illustrator", level: 78 },
+  { name: "Canva", level: 85 },
+  { name: "Figma", level: 72 },
+  { name: "DaVinci Resolve", level: 70 },
 ];
 
 const ResumeSection = () => {
