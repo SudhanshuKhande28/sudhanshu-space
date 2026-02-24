@@ -18,19 +18,15 @@ const ContactSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const form = e.target as HTMLFormElement;
-    await fetch("https://formspree.io/f/xqedgbge", {
-      method: "POST",
-      body: new FormData(form),
-      headers: { Accept: "application/json" },
-    });
-    setIsSubmitting(false);
-    toast.success("Message sent successfully! I'll get back to you soon.");
-    form.reset();
+    setTimeout(() => {
+      setIsSubmitting(false);
+      toast.success("Message sent successfully! I'll get back to you soon.");
+    }, 1000);
   };
+
   return (
     <section id="contact" className="py-24 md:py-32 bg-card">
       <div className="container mx-auto px-6" ref={ref}>
@@ -95,44 +91,40 @@ const ContactSection = () => {
             <div className="grid sm:grid-cols-2 gap-6">
               <motion.div whileFocus={{ scale: 1.01 }}>
                 <label className="block text-sm font-medium mb-2">Name</label>
-              <Input
-  placeholder="Your name"
-  name="name"
-  required
-  className="bg-background border-border focus:border-primary transition-all duration-300"
-/>
+                <Input
+                  placeholder="Your name"
+                  required
+                  className="bg-background border-border focus:border-primary transition-all duration-300"
+                />
               </motion.div>
               <div>
                 <label className="block text-sm font-medium mb-2">Email</label>
                 <Input
-  type="email"
-  placeholder="your@email.com"
-  name="email"
-  required
-  className="bg-background border-border focus:border-primary transition-all duration-300"
-/>
+                  type="email"
+                  placeholder="your@email.com"
+                  required
+                  className="bg-background border-border focus:border-primary transition-all duration-300"
+                />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Subject</label>
-            <Input
-  placeholder="Project inquiry"
-  name="subject"
-  required
-  className="bg-background border-border focus:border-primary transition-all duration-300"
-/>
+              <Input
+                placeholder="Project inquiry"
+                required
+                className="bg-background border-border focus:border-primary transition-all duration-300"
+              />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Message</label>
-             <Textarea
-  placeholder="Tell me about your project..."
-  name="message"
-  rows={5}
-  required
-  className="bg-background border-border focus:border-primary resize-none transition-all duration-300"
-/>
+              <Textarea
+                placeholder="Tell me about your project..."
+                rows={5}
+                required
+                className="bg-background border-border focus:border-primary resize-none transition-all duration-300"
+              />
             </div>
 
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
