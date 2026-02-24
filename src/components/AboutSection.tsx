@@ -51,10 +51,10 @@ const AboutSection = () => {
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
           >
             <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.3 }}
-              className="text-primary font-medium text-sm uppercase tracking-wider"
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{ delay: 0.3, type: "spring" }}
+              className="text-primary font-medium text-sm uppercase tracking-wider inline-block"
             >
               About Me
             </motion.span>
@@ -64,7 +64,28 @@ const AboutSection = () => {
               transition={{ delay: 0.4 }}
               className="text-4xl md:text-5xl font-display font-bold mt-2 mb-6"
             >
-              Passionate About <span className="text-gradient">Visual Excellence</span>
+              {"Passionate About ".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.5 + i * 0.03 }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+              <span className="text-gradient">
+                {"Visual Excellence".split("").map((char, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.9 + i * 0.03 }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}

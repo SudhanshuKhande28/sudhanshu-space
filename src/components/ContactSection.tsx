@@ -36,9 +36,39 @@ const ContactSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="text-primary font-medium text-sm uppercase tracking-wider">Get In Touch</span>
+          <motion.span
+            initial={{ opacity: 0, letterSpacing: "0.5em" }}
+            animate={isInView ? { opacity: 1, letterSpacing: "0.15em" } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-primary font-medium text-sm uppercase tracking-wider inline-block"
+          >
+            Get In Touch
+          </motion.span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
-            Let's <span className="text-gradient">Work Together</span>
+            {"Let's ".split("").map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.4 + i * 0.05 }}
+              >
+                {char}
+              </motion.span>
+            ))}
+            <span className="text-gradient">
+              {"Work Together".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, rotateY: 90 }}
+                  animate={isInView ? { opacity: 1, rotateY: 0 } : {}}
+                  transition={{ delay: 0.6 + i * 0.04, type: "spring" }}
+                  className="inline-block"
+                  style={{ display: char === " " ? "inline" : "inline-block" }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </span>
           </h2>
         </motion.div>
 
