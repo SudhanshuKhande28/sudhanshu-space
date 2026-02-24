@@ -68,9 +68,38 @@ const ServicesSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="text-primary font-medium text-sm uppercase tracking-wider">What I Do</span>
+          <motion.span
+            initial={{ opacity: 0, letterSpacing: "0.5em" }}
+            animate={isInView ? { opacity: 1, letterSpacing: "0.15em" } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-primary font-medium text-sm uppercase tracking-wider inline-block"
+          >
+            What I Do
+          </motion.span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
-            My <span className="text-gradient">Services</span>
+            {"My ".split("").map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.4 + i * 0.05 }}
+              >
+                {char}
+              </motion.span>
+            ))}
+            <span className="text-gradient">
+              {"Services".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 30, rotateX: 90 }}
+                  animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
+                  transition={{ delay: 0.5 + i * 0.06, type: "spring" }}
+                  className="inline-block"
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </span>
           </h2>
         </motion.div>
 

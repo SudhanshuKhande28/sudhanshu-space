@@ -46,9 +46,39 @@ const WorksSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="text-primary font-medium text-sm uppercase tracking-wider">Portfolio</span>
+          <motion.span
+            initial={{ opacity: 0, letterSpacing: "0.5em" }}
+            animate={isInView ? { opacity: 1, letterSpacing: "0.15em" } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-primary font-medium text-sm uppercase tracking-wider inline-block"
+          >
+            Portfolio
+          </motion.span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
-            My <span className="text-gradient">Recent Works</span>
+            {"My ".split("").map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.4 + i * 0.05 }}
+              >
+                {char}
+              </motion.span>
+            ))}
+            <span className="text-gradient">
+              {"Recent Works".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.5 + i * 0.04, type: "spring", stiffness: 300 }}
+                  className="inline-block"
+                  style={{ display: char === " " ? "inline" : "inline-block" }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </span>
           </h2>
         </motion.div>
 

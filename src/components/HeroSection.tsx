@@ -2,8 +2,13 @@ import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import sudhanshuPhoto from "@/assets/sudhanshu-photo.jpg";
+import { useTypewriter } from "@/hooks/useTypewriter";
 
 const HeroSection = () => {
+  const { displayedText: greeting, isComplete: greetingDone } = useTypewriter("Hello, I'm", 100, 400);
+  const { displayedText: nameText, isComplete: nameDone } = useTypewriter("Sudhanshu Khande", 70, 1500);
+  const { displayedText: roleText } = useTypewriter("Graphic Designer & Video Editor", 40, 2800);
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
@@ -53,32 +58,51 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="text-center md:text-left order-2 md:order-1">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
             >
-              <span className="text-lg md:text-xl text-muted-foreground">Hello, I'm</span>
+              <span className="text-lg md:text-xl text-muted-foreground">
+                {greeting}
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                  className={greetingDone ? "hidden" : "inline-block w-[2px] h-5 bg-primary ml-1 align-middle"}
+                />
+              </span>
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: greetingDone ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
               className="text-4xl md:text-6xl lg:text-7xl font-display font-bold my-4 leading-tight"
             >
-              <span className="text-gradient">Sudhanshu Khande</span>
+              <span className="text-gradient">
+                {nameText}
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                  className={nameDone ? "hidden" : "inline-block w-[3px] h-12 bg-primary ml-1 align-middle"}
+                />
+              </span>
             </motion.h1>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: greetingDone ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
             >
               <motion.span
                 className="inline-block px-4 py-2 rounded-full bg-secondary text-foreground text-sm md:text-base font-medium mb-6"
                 whileHover={{ scale: 1.05 }}
               >
-                Graphic Designer & Video Editor
+                {roleText}
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                  className={roleText.length >= 31 ? "hidden" : "inline-block w-[2px] h-4 bg-primary ml-1 align-middle"}
+                />
               </motion.span>
             </motion.div>
 
