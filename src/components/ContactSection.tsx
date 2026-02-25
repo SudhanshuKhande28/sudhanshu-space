@@ -1,6 +1,4 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +12,6 @@ const contactInfo = [
 ];
 
 const ContactSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,56 +25,19 @@ const ContactSection = () => {
 
   return (
     <section id="contact" className="py-24 md:py-32 bg-card">
-      <div className="container mx-auto px-6" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <motion.span
-            initial={{ opacity: 0, letterSpacing: "0.5em" }}
-            animate={isInView ? { opacity: 1, letterSpacing: "0.15em" } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-primary font-medium text-sm uppercase tracking-wider inline-block"
-          >
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-16">
+          <span className="text-primary font-medium text-sm uppercase tracking-widest inline-block">
             Get In Touch
-          </motion.span>
+          </span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
-            {"Let's ".split("").map((char, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.4 + i * 0.05 }}
-              >
-                {char}
-              </motion.span>
-            ))}
-            <span className="text-gradient">
-              {"Work Together".split("").map((char, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, rotateY: 90 }}
-                  animate={isInView ? { opacity: 1, rotateY: 0 } : {}}
-                  transition={{ delay: 0.6 + i * 0.04, type: "spring" }}
-                  className="inline-block"
-                  style={{ display: char === " " ? "inline" : "inline-block" }}
-                >
-                  {char === " " ? "\u00A0" : char}
-                </motion.span>
-              ))}
-            </span>
+            Let's <span className="text-gradient">Work Together</span>
           </h2>
-        </motion.div>
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
           {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          <div>
             <h3 className="text-2xl font-display font-bold mb-6">Contact Information</h3>
             <p className="text-muted-foreground text-lg mb-8">
               Have a project in mind? Let's discuss how we can work together 
@@ -86,47 +45,34 @@ const ContactSection = () => {
             </p>
 
             <div className="space-y-6">
-              {contactInfo.map((item, i) => (
-                <motion.div
+              {contactInfo.map((item) => (
+                <div
                   key={item.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.4 + i * 0.15 }}
-                  whileHover={{ x: 8 }}
-                  className="flex items-center gap-4 cursor-default"
+                  className="flex items-center gap-4 cursor-default hover:translate-x-2 transition-transform duration-200"
                 >
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center flex-shrink-0"
-                  >
+                  <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
                     <item.icon className="w-5 h-5 text-primary-foreground" />
-                  </motion.div>
+                  </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{item.label}</p>
                     <p className="font-medium">{item.value}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Contact Form */}
-          <motion.form
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            onSubmit={handleSubmit}
-            className="space-y-6"
-          >
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid sm:grid-cols-2 gap-6">
-              <motion.div whileFocus={{ scale: 1.01 }}>
+              <div>
                 <label className="block text-sm font-medium mb-2">Name</label>
                 <Input
                   placeholder="Your name"
                   required
                   className="bg-background border-border focus:border-primary transition-all duration-300"
                 />
-              </motion.div>
+              </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Email</label>
                 <Input
@@ -157,29 +103,20 @@ const ContactSection = () => {
               />
             </div>
 
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button
-                type="submit"
-                size="lg"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow"
-              >
-                {isSubmitting ? (
-                  <motion.span
-                    animate={{ opacity: [1, 0.5, 1] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                  >
-                    Sending...
-                  </motion.span>
-                ) : (
-                  <>
-                    Send Message
-                    <Send className="w-4 h-4 ml-2" />
-                  </>
-                )}
-              </Button>
-            </motion.div>
-          </motion.form>
+            <Button
+              type="submit"
+              size="lg"
+              disabled={isSubmitting}
+              className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow"
+            >
+              {isSubmitting ? "Sending..." : (
+                <>
+                  Send Message
+                  <Send className="w-4 h-4 ml-2" />
+                </>
+              )}
+            </Button>
+          </form>
         </div>
       </div>
     </section>
