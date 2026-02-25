@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
+import { Instagram, Linkedin, MessageCircle, Twitter, Youtube } from "lucide-react";
 
 const socialLinks = [
+  { icon: MessageCircle, href: "https://wa.me/919130157317", label: "WhatsApp" },
   { icon: Instagram, href: "#", label: "Instagram" },
   { icon: Twitter, href: "#", label: "Twitter" },
   { icon: Linkedin, href: "#", label: "LinkedIn" },
