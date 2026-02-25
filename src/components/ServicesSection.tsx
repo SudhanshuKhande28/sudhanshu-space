@@ -1,6 +1,3 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { Palette, Video, Layers, Wand2, PenTool, Monitor } from "lucide-react";
 
 const services = [
@@ -37,97 +34,32 @@ const services = [
 ];
 
 const ServicesSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.12,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { duration: 0.5, ease: "easeOut" as const },
-    },
-  };
-
   return (
     <section id="services" className="py-24 md:py-32">
-      <div className="container mx-auto px-6" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <motion.span
-            initial={{ opacity: 0, letterSpacing: "0.5em" }}
-            animate={isInView ? { opacity: 1, letterSpacing: "0.15em" } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-primary font-medium text-sm uppercase tracking-wider inline-block"
-          >
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-16">
+          <span className="text-primary font-medium text-sm uppercase tracking-widest inline-block">
             What I Do
-          </motion.span>
+          </span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
-            {"My ".split("").map((char, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.4 + i * 0.05 }}
-              >
-                {char}
-              </motion.span>
-            ))}
-            <span className="text-gradient">
-              {"Services".split("").map((char, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 30, rotateX: 90 }}
-                  animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-                  transition={{ delay: 0.5 + i * 0.06, type: "spring" }}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </span>
+            My <span className="text-gradient">Services</span>
           </h2>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
-            <motion.div
+            <div
               key={service.title}
-              variants={cardVariants}
-              whileHover={{ y: -8, borderColor: "hsl(15 90% 60% / 0.5)" }}
-              className="group p-8 rounded-2xl bg-card border border-border transition-shadow duration-300 hover:shadow-card cursor-default"
+              className="group p-8 rounded-2xl bg-card border border-border transition-all duration-300 hover:shadow-card hover:-translate-y-2 hover:border-primary/50 cursor-default"
             >
-              <motion.div
-                className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center mb-6"
-                whileHover={{ scale: 1.15, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
+              <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
                 <service.icon className="w-7 h-7 text-primary-foreground" />
-              </motion.div>
+              </div>
               <h3 className="text-xl font-display font-bold mb-3 group-hover:text-gradient transition-all duration-300">{service.title}</h3>
               <p className="text-muted-foreground leading-relaxed">{service.description}</p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
