@@ -26,6 +26,142 @@ const works = [
   { title: "KidoLearn - Mobile App Design", category: "UI/UX", image: kidolearn, desc: "Fun & colorful learning app UI design for kids." },
 ];
 
+// 3D Tilt Card Component
+const TiltCard = ({ work, index }: { work: typeof works[0]; index: number }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [glowPos, setGlowPos] = useState({ x: 50, y: 50 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const tiltX = ((y - centerY) / centerY) * -15;
+    const tiltY = ((x - centerX) / centerX) * 15;
+    setTilt({ x: tiltX, y: tiltY });
+    setGlowPos({ x: (x / rect.width) * 100, y: (y / rect.height) * 100 });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+    setIsHovered(false);
+  };
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.8, y: 30 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.8, y: -20 }}
+      transition={{ duration: 0.4, delay: index * 0.08 }}
+      style={{ perspective: "1000px" }}
+    >
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onMouseEnter={() => setIsHovered(true)}
+        animate={{
+          rotateX: tilt.x,
+          rotateY: tilt.y,
+          scale: isHovered ? 1.04 : 1,
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-secondary cursor-pointer"
+        style={{
+          transformStyle: "preserve-3d",
+          boxShadow: isHovered
+            ? "0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(255,90,0,0.15)"
+            : "0 4px 20px rgba(0,0,0,0.3)",
+        }}
+      >
+        {/* Image */}
+        <motion.img
+          src={work.image}
+          alt={work.title}
+          className="absolute inset-0 w-full h-full object-cover"
+          animate={{ scale: isHovered ? 1.1 : 1 }}
+          transition={{ duration: 0.5 }}
+        />
+
+        {/* Cursor spotlight */}
+        {isHovered && (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at ${glowPos.x}% ${glowPos.y}%, rgba(255,90,0,0.15) 0%, transparent 60%)`,
+            }}
+          />
+        )}
+
+        {/* Category badge */}
+        <div className="absolute top-3 left-3 z-10" style={{ transform: "translateZ(20px)" }}>
+          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/50 text-white backdrop-blur-sm border border-white/10">
+            {work.category}
+          </span>
+        </div>
+
+        {/* Hover overlay */}
+        <motion.div
+          className="absolute inset-0 flex flex-col items-center justify-center p-6"
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          style={{ background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 100%)" }}
+        >
+          <div style={{ transform: "translateZ(30px)" }} className="text-center">
+            <motion.h3
+              className="text-xl font-display font-bold mb-2"
+              animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
+            >
+              {work.title}
+            </motion.h3>
+            <motion.p
+              className="text-muted-foreground text-sm mb-3"
+              animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              {work.desc}
+            </motion.p>
+            <motion.span
+              className="text-primary text-xs font-semibold uppercase tracking-wider block mb-4"
+              animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.3, delay: 0.15 }}
+            >
+              {work.category}
+            </motion.span>
+            <motion.button
+              className="p-3 rounded-full text-primary-foreground"
+              style={{ background: "linear-gradient(135deg, #ff5a00, #ffaa00)", boxShadow: "0 0 20px rgba(255,90,0,0.6)" }}
+              animate={{ scale: isHovered ? 1 : 0, opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              {work.category === "Video" || work.category === "Motion" ? (
+                <Play className="w-5 h-5" />
+              ) : (
+                <ExternalLink className="w-5 h-5" />
+              )}
+            </motion.button>
+          </div>
+        </motion.div>
+
+        {/* Bottom glow bar */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-1"
+          style={{ background: "linear-gradient(to right, #ff5a00, #ffaa00)" }}
+          animate={{ scaleX: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+        />
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const WorksSection = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const ref = useRef(null);
@@ -38,8 +174,6 @@ const WorksSection = () => {
 
   return (
     <section id="works" className="py-24 md:py-32 bg-card relative overflow-hidden">
-
-      {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
           animate={{ scale: [1, 1.3, 1], opacity: [0.03, 0.07, 0.03] }}
@@ -50,8 +184,6 @@ const WorksSection = () => {
       </div>
 
       <div className="container mx-auto px-6" ref={ref}>
-
-        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -67,7 +199,10 @@ const WorksSection = () => {
             Portfolio
           </motion.span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
-            My <span className="text-gradient" style={{ filter: "drop-shadow(0 0 20px rgba(255,90,0,0.3))" }}>Recent Works</span>
+            My{" "}
+            <span className="text-gradient" style={{ filter: "drop-shadow(0 0 20px rgba(255,90,0,0.3))" }}>
+              Recent Works
+            </span>
           </h2>
           <motion.div
             className="w-20 h-1 bg-gradient-primary mx-auto mt-4 rounded-full"
@@ -77,7 +212,6 @@ const WorksSection = () => {
           />
         </motion.div>
 
-        {/* Filter buttons */}
         <motion.div
           className="flex flex-wrap justify-center gap-3 mb-12"
           initial={{ opacity: 0, y: 20 }}
@@ -96,119 +230,19 @@ const WorksSection = () => {
               className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 activeCategory === category
                   ? "bg-gradient-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground hover:text-foreground hover:border-primary/50 border border-transparent"
+                  : "bg-secondary text-muted-foreground hover:text-foreground border border-transparent hover:border-primary/50"
               }`}
-              style={activeCategory === category ? {
-                boxShadow: "0 0 20px rgba(255,90,0,0.4)"
-              } : {}}
+              style={activeCategory === category ? { boxShadow: "0 0 20px rgba(255,90,0,0.4)" } : {}}
             >
               {category}
             </motion.button>
           ))}
         </motion.div>
 
-        {/* Works Grid */}
-        <motion.div
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-          layout
-        >
+        <motion.div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" layout>
           <AnimatePresence mode="popLayout">
             {filteredWorks.map((work, index) => (
-              <motion.div
-                key={work.title}
-                layout
-                initial={{ opacity: 0, scale: 0.8, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: -20 }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-secondary cursor-pointer"
-                whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }}
-              >
-                {/* Project image */}
-                <motion.img
-                  src={work.image}
-                  alt={work.title}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.5 }}
-                />
-
-                {/* Category badge */}
-                <div className="absolute top-3 left-3 z-10">
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/50 text-white backdrop-blur-sm border border-white/10">
-                    {work.category}
-                  </span>
-                </div>
-
-                {/* Hover overlay */}
-                <motion.div
-                  className="absolute inset-0 flex flex-col items-center justify-center p-6"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 100%)" }}
-                >
-                  {/* Glow effect on hover */}
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    style={{ boxShadow: "inset 0 0 60px rgba(255,90,0,0.15)" }}
-                  />
-
-                  <motion.h3
-                    className="text-xl font-display font-bold mb-2 text-center"
-                    initial={{ y: 20, opacity: 0 }}
-                    whileHover={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.05 }}
-                  >
-                    {work.title}
-                  </motion.h3>
-
-                  <motion.p
-                    className="text-muted-foreground text-sm text-center mb-4"
-                    initial={{ y: 20, opacity: 0 }}
-                    whileHover={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                  >
-                    {work.desc}
-                  </motion.p>
-
-                  <motion.span
-                    className="text-primary text-xs font-semibold uppercase tracking-wider mb-4"
-                    initial={{ y: 20, opacity: 0 }}
-                    whileHover={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.15 }}
-                  >
-                    {work.category}
-                  </motion.span>
-
-                  <motion.button
-                    className="p-3 rounded-full text-primary-foreground transition-all duration-200"
-                    style={{ background: "linear-gradient(135deg, #ff5a00, #ffaa00)", boxShadow: "0 0 20px rgba(255,90,0,0.5)" }}
-                    initial={{ scale: 0, opacity: 0 }}
-                    whileHover={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    {work.category === "Video" || work.category === "Motion" ? (
-                      <Play className="w-5 h-5" />
-                    ) : (
-                      <ExternalLink className="w-5 h-5" />
-                    )}
-                  </motion.button>
-                </motion.div>
-
-                {/* Bottom glow bar on hover */}
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-1"
-                  style={{ background: "linear-gradient(to right, #ff5a00, #ffaa00)" }}
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.div>
+              <TiltCard key={work.title} work={work} index={index} />
             ))}
           </AnimatePresence>
         </motion.div>
