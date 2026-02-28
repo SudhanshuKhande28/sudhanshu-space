@@ -26,7 +26,6 @@ const works = [
   { title: "KidoLearn - Mobile App Design", category: "UI/UX", image: kidolearn, desc: "Fun & colorful learning app UI design for kids." },
 ];
 
-// Flip Card Component — normal grid layout, stack animation via initial/animate
 const FlipCard = ({
   work,
   index,
@@ -37,45 +36,28 @@ const FlipCard = ({
   isDealt: boolean;
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
-
-  // Stack: all cards start rotated and offset to look like a pile
   const stackRotateZ = (index % 3 - 1) * 6;
   const stackRotateX = 20;
-  const stackY = index * -4; // slight vertical offset per card
+  const stackY = index * -4;
 
   return (
     <motion.div
       style={{ perspective: "1200px" }}
       className="aspect-[4/3] cursor-pointer w-full"
-      initial={{
-        opacity: 0,
-        rotateZ: stackRotateZ,
-        rotateX: stackRotateX,
-        y: stackY + 80,
-        scale: 0.75,
-      }}
+      initial={{ opacity: 0, rotateZ: stackRotateZ, rotateX: stackRotateX, y: stackY + 80, scale: 0.75 }}
       animate={
         isDealt
           ? { opacity: 1, rotateZ: 0, rotateX: 0, y: 0, scale: 1 }
           : { opacity: 0, rotateZ: stackRotateZ, rotateX: stackRotateX, y: stackY + 80, scale: 0.75 }
       }
-      transition={{
-        duration: 0.75,
-        delay: isDealt ? index * 0.11 : 0,
-        ease: [0.23, 1, 0.32, 1],
-      }}
+      transition={{ duration: 0.75, delay: isDealt ? index * 0.11 : 0, ease: [0.23, 1, 0.32, 1] }}
       onMouseEnter={() => isDealt && setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
     >
       <motion.div
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-        style={{
-          transformStyle: "preserve-3d",
-          width: "100%",
-          height: "100%",
-          position: "relative",
-        }}
+        style={{ transformStyle: "preserve-3d", width: "100%", height: "100%", position: "relative" }}
       >
         {/* FRONT */}
         <div
@@ -114,16 +96,14 @@ const FlipCard = ({
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            background: "linear-gradient(135deg, #0f0a05 0%, #1c0e00 50%, #0f0a05 100%)",
+            background: "linear-gradient(135deg, #0a0a0a 0%, #150800 50%, #0a0a0a 100%)",
             border: "1px solid rgba(255,90,0,0.25)",
             boxShadow: "inset 0 0 60px rgba(255,90,0,0.07), 0 20px 40px rgba(0,0,0,0.5)",
           }}
         >
-          {/* Glow */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 50%, rgba(255,90,0,0.1) 0%, transparent 70%)" }} />
-          {/* Grid */}
           <div className="absolute inset-0 pointer-events-none" style={{
-            backgroundImage: "linear-gradient(rgba(255,90,0,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.07) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(255,90,0,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.12) 1px, transparent 1px)",
             backgroundSize: "28px 28px",
           }} />
 
@@ -175,7 +155,6 @@ const FlipCard = ({
             )}
           </motion.button>
 
-          {/* Corner decorations */}
           <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2" style={{ borderColor: "rgba(255,90,0,0.35)" }} />
           <div className="absolute top-3 right-3 w-3 h-3 border-t-2 border-r-2" style={{ borderColor: "rgba(255,90,0,0.35)" }} />
           <div className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2" style={{ borderColor: "rgba(255,90,0,0.35)" }} />
@@ -217,35 +196,40 @@ const WorksSection = () => {
   return (
     <section id="works" className="py-24 md:py-32 relative overflow-hidden">
 
-      {/* Rich background */}
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #0a0a0a 0%, #0f0800 50%, #0a0a0a 100%)" }} />
+      {/* Pure dark background */}
+      <div className="absolute inset-0" style={{ background: "#000000" }} />
 
-      {/* Animated background orbs */}
+      {/* Visible grid lines */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: "linear-gradient(rgba(255,90,0,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.18) 1px, transparent 1px)",
+        backgroundSize: "60px 60px",
+      }} />
+
+      {/* Fade edges so grid doesnt look cut off */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse at center, transparent 40%, #000000 100%)"
+      }} />
+
+      {/* Animated glow orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
-          animate={{ scale: [1, 1.4, 1], opacity: [0.06, 0.14, 0.06], x: [0, 30, 0] }}
+          animate={{ scale: [1, 1.4, 1], opacity: [0.08, 0.18, 0.08] }}
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-3xl"
-          style={{ background: "radial-gradient(ellipse, rgba(255,90,0,0.3) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse, rgba(255,90,0,0.35) 0%, transparent 70%)" }}
         />
         <motion.div
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.04, 0.09, 0.04] }}
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.05, 0.12, 0.05] }}
           transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           className="absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(255,60,0,0.2) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(255,60,0,0.25) 0%, transparent 70%)" }}
         />
         <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.03, 0.07, 0.03] }}
+          animate={{ scale: [1, 1.3, 1], opacity: [0.04, 0.1, 0.04] }}
           transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 4 }}
           className="absolute bottom-0 right-0 w-80 h-80 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(255,120,0,0.15) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(255,120,0,0.2) 0%, transparent 70%)" }}
         />
-
-        {/* Subtle grid */}
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: "linear-gradient(rgba(255,90,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.04) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }} />
 
         {/* Floating dots */}
         {[...Array(12)].map((_, i) => (
@@ -257,9 +241,9 @@ const WorksSection = () => {
               height: Math.random() * 3 + 1,
               top: `${10 + i * 8}%`,
               left: `${5 + i * 8}%`,
-              background: i % 2 === 0 ? "rgba(255,90,0,0.4)" : "rgba(255,255,255,0.15)",
+              background: i % 2 === 0 ? "rgba(255,90,0,0.5)" : "rgba(255,255,255,0.2)",
             }}
-            animate={{ y: [0, -20, 0], opacity: [0.2, 0.6, 0.2] }}
+            animate={{ y: [0, -20, 0], opacity: [0.2, 0.7, 0.2] }}
             transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
           />
         ))}
@@ -274,11 +258,7 @@ const WorksSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <motion.span
-            className="text-primary font-medium text-sm uppercase tracking-widest inline-block"
-            initial={{ opacity: 0, y: 10 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-          >
+          <motion.span className="text-primary font-medium text-sm uppercase tracking-widest inline-block">
             Portfolio
           </motion.span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
@@ -336,12 +316,7 @@ const WorksSection = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredWorks.map((work, index) => (
-              <FlipCard
-                key={work.title}
-                work={work}
-                index={index}
-                isDealt={isDealt}
-              />
+              <FlipCard key={work.title} work={work} index={index} isDealt={isDealt} />
             ))}
           </AnimatePresence>
         </div>
