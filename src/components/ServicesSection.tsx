@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Palette, Video, Layers, Wand2, PenTool, Monitor } from "lucide-react";
+import { Palette, Video, Layers, PenTool, Monitor } from "lucide-react";
 
 const services = [
   {
@@ -32,12 +32,6 @@ const services = [
     title: "UI/UX Design",
     description: "User-centered interface designs for websites and mobile applications.",
     color: "#ff8c00",
-  },
-  {
-    icon: Wand2,
-    title: "Visual Effects",
-    description: "Professional VFX and compositing for film, TV, and digital content.",
-    color: "#ff6a00",
   },
 ];
 
@@ -75,7 +69,6 @@ const ServiceCard = ({
         cursor: "default",
       }}
       className="relative p-8 rounded-2xl border transition-colors duration-300"
-      whileTap={{ scale: 0.97 }}
     >
       {/* Card background */}
       <motion.div
@@ -84,9 +77,6 @@ const ServiceCard = ({
           background: isHovered
             ? `linear-gradient(135deg, #0f0a05 0%, #1c0e00 100%)`
             : "transparent",
-          borderColor: isHovered
-            ? `rgba(255,90,0,0.5)`
-            : "rgba(255,255,255,0.08)",
         }}
         style={{
           border: "1px solid",
@@ -94,7 +84,7 @@ const ServiceCard = ({
         }}
       />
 
-      {/* Glow effect on hover */}
+      {/* Glow */}
       <motion.div
         className="absolute inset-0 rounded-2xl pointer-events-none"
         animate={{
@@ -105,7 +95,7 @@ const ServiceCard = ({
         transition={{ duration: 0.3 }}
       />
 
-      {/* Grid lines inside card on hover */}
+      {/* Grid lines inside card */}
       <motion.div
         className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden"
         animate={{ opacity: isHovered ? 1 : 0 }}
@@ -125,14 +115,10 @@ const ServiceCard = ({
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Icon */}
         <motion.div
           animate={{
             scale: isHovered ? 1.15 : 1,
-            rotate: isHovered ? [0, -8, 8, 0] : 0,
-            boxShadow: isHovered
-              ? `0 0 30px rgba(255,90,0,0.5)`
-              : "none",
+            boxShadow: isHovered ? `0 0 30px rgba(255,90,0,0.5)` : "none",
           }}
           transition={{ duration: 0.4 }}
           className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center mb-6"
@@ -140,7 +126,6 @@ const ServiceCard = ({
           <service.icon className="w-7 h-7 text-primary-foreground" />
         </motion.div>
 
-        {/* Title */}
         <motion.h3
           animate={{ color: isHovered ? "#ff8c42" : "#ffffff" }}
           transition={{ duration: 0.2 }}
@@ -149,7 +134,6 @@ const ServiceCard = ({
           {service.title}
         </motion.h3>
 
-        {/* Animated underline */}
         <motion.div
           className="h-px mb-3 rounded-full"
           animate={{ width: isHovered ? "60px" : "0px" }}
@@ -157,7 +141,6 @@ const ServiceCard = ({
           style={{ background: "linear-gradient(to right, #ff5a00, transparent)" }}
         />
 
-        {/* Description */}
         <motion.p
           animate={{ color: isHovered ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.45)" }}
           transition={{ duration: 0.2 }}
@@ -166,7 +149,6 @@ const ServiceCard = ({
           {service.description}
         </motion.p>
 
-        {/* Hover badge */}
         <motion.div
           animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 8 }}
           transition={{ duration: 0.25, delay: 0.1 }}
@@ -181,11 +163,8 @@ const ServiceCard = ({
         </motion.div>
       </div>
 
-      {/* Corner decorations on hover */}
-      <motion.div
-        animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.2 }}
-      >
+      {/* Corner decorations */}
+      <motion.div animate={{ opacity: isHovered ? 1 : 0 }} transition={{ duration: 0.2 }}>
         <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2" style={{ borderColor: "rgba(255,90,0,0.5)" }} />
         <div className="absolute top-3 right-3 w-3 h-3 border-t-2 border-r-2" style={{ borderColor: "rgba(255,90,0,0.5)" }} />
         <div className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2" style={{ borderColor: "rgba(255,90,0,0.5)" }} />
@@ -231,11 +210,7 @@ const ServicesSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.span
-            className="text-primary font-medium text-sm uppercase tracking-widest inline-block"
-            initial={{ opacity: 0, y: 10 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-          >
+          <motion.span className="text-primary font-medium text-sm uppercase tracking-widest inline-block">
             What I Do
           </motion.span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
