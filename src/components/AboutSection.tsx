@@ -4,9 +4,9 @@ import { useRef } from "react";
 import sudhanshuAbout from "@/assets/sudhanshu-about.jpg";
 
 const stats = [
-  { value: "5+", label: "Years Experience" },
-  { value: "50+", label: "Projects Done" },
-  { value: "30+", label: "Happy Clients" },
+  { value: "2+", label: "Years Experience" },
+  { value: "30+", label: "Projects Done" },
+  { value: "10+", label: "Happy Clients" },
 ];
 
 const AboutSection = () => {
@@ -93,7 +93,7 @@ const AboutSection = () => {
               transition={{ delay: 0.5 }}
               className="text-muted-foreground text-lg leading-relaxed mb-6"
             >
-              With over 5 years of experience in graphic design and video editing, 
+              With over 2 years of experience in graphic design and video editing, 
               I specialize in creating compelling visual content that tells your story. 
               From brand identities to motion graphics, I bring creativity and technical 
               expertise to every project.
