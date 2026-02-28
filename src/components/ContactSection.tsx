@@ -14,13 +14,26 @@ const contactInfo = [
 const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success("Message sent successfully! I'll get back to you soon.");
-    }, 1000);
+    const form = e.target as HTMLFormElement;
+    try {
+      const response = await fetch("https://formspree.io/f/xqedgbge", {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
+      if (response.ok) {
+        toast.success("Message sent successfully! I'll get back to you soon.");
+        form.reset();
+      } else {
+        toast.error("Something went wrong. Please try again!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again!");
+    }
+    setIsSubmitting(false);
   };
 
   return (
@@ -40,7 +53,7 @@ const ContactSection = () => {
           <div>
             <h3 className="text-2xl font-display font-bold mb-6">Contact Information</h3>
             <p className="text-muted-foreground text-lg mb-8">
-              Have a project in mind? Let's discuss how we can work together 
+              Have a project in mind? Let's discuss how we can work together
               to bring your vision to life.
             </p>
 
@@ -68,6 +81,7 @@ const ContactSection = () => {
               <div>
                 <label className="block text-sm font-medium mb-2">Name</label>
                 <Input
+                  name="name"
                   placeholder="Your name"
                   required
                   className="bg-background border-border focus:border-primary transition-all duration-300"
@@ -77,6 +91,7 @@ const ContactSection = () => {
                 <label className="block text-sm font-medium mb-2">Email</label>
                 <Input
                   type="email"
+                  name="email"
                   placeholder="your@email.com"
                   required
                   className="bg-background border-border focus:border-primary transition-all duration-300"
@@ -87,6 +102,7 @@ const ContactSection = () => {
             <div>
               <label className="block text-sm font-medium mb-2">Subject</label>
               <Input
+                name="subject"
                 placeholder="Project inquiry"
                 required
                 className="bg-background border-border focus:border-primary transition-all duration-300"
@@ -96,6 +112,7 @@ const ContactSection = () => {
             <div>
               <label className="block text-sm font-medium mb-2">Message</label>
               <Textarea
+                name="message"
                 placeholder="Tell me about your project..."
                 rows={5}
                 required
