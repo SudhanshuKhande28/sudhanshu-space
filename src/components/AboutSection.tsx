@@ -25,7 +25,7 @@ const AboutSection = () => {
             className="relative group"
           >
             <motion.div
-              className="aspect-[4/5] rounded-2xl overflow-hidden bg-secondary"
+              className="aspect-[4/5] max-w-sm mx-auto rounded-2xl overflow-hidden bg-secondary"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
