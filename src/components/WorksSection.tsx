@@ -26,90 +26,42 @@ const works = [
   { title: "KidoLearn - Mobile App Design", category: "UI/UX", image: kidolearn, desc: "Fun & colorful learning app UI design for kids." },
 ];
 
-// Grid positions for 3 columns x 3 rows
-// Each card's final position relative to grid container
-const getGridPosition = (index: number, totalCols: number = 3) => {
-  const col = index % totalCols;
-  const row = Math.floor(index / totalCols);
-  const cardW = 380;
-  const cardH = 285;
-  const gapX = 24;
-  const gapY = 24;
-  return {
-    x: col * (cardW + gapX),
-    y: row * (cardH + gapY),
-  };
-};
-
+// Flip Card Component — normal grid layout, stack animation via initial/animate
 const FlipCard = ({
   work,
   index,
   isDealt,
-  totalCards,
 }: {
   work: typeof works[0];
   index: number;
   isDealt: boolean;
-  totalCards: number;
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Stack offset — each card slightly offset from previous for 3D depth
-  const stackRotateZ = (index - totalCards / 2) * 2.5;
-  const stackRotateX = 15;
-  const stackRotateY = -10;
-  const stackOffsetX = (index - totalCards / 2) * 5;
-  const stackOffsetY = (index - totalCards / 2) * 4;
-
-  // Final grid position
-  const gridPos = getGridPosition(index);
-
-  // Center of the grid (where stack appears)
-  // Stack appears at position of middle card
-  const middlePos = getGridPosition(Math.floor(totalCards / 2));
+  // Stack: all cards start rotated and offset to look like a pile
+  const stackRotateZ = (index % 3 - 1) * 6;
+  const stackRotateX = 20;
+  const stackY = index * -4; // slight vertical offset per card
 
   return (
     <motion.div
-      style={{
-        position: "absolute",
-        width: 380,
-        height: 285,
-        perspective: "1200px",
-        cursor: "pointer",
-        zIndex: isDealt ? 1 : totalCards - index,
-      }}
-      // Start: all stacked at center
+      style={{ perspective: "1200px" }}
+      className="aspect-[4/3] cursor-pointer w-full"
       initial={{
-        x: middlePos.x + stackOffsetX,
-        y: middlePos.y + stackOffsetY,
+        opacity: 0,
         rotateZ: stackRotateZ,
         rotateX: stackRotateX,
-        rotateY: stackRotateY,
-        scale: 0.88,
+        y: stackY + 80,
+        scale: 0.75,
       }}
-      // End: fly to their grid position
       animate={
         isDealt
-          ? {
-              x: gridPos.x,
-              y: gridPos.y,
-              rotateZ: 0,
-              rotateX: 0,
-              rotateY: 0,
-              scale: 1,
-            }
-          : {
-              x: middlePos.x + stackOffsetX,
-              y: middlePos.y + stackOffsetY,
-              rotateZ: stackRotateZ,
-              rotateX: stackRotateX,
-              rotateY: stackRotateY,
-              scale: 0.88,
-            }
+          ? { opacity: 1, rotateZ: 0, rotateX: 0, y: 0, scale: 1 }
+          : { opacity: 0, rotateZ: stackRotateZ, rotateX: stackRotateX, y: stackY + 80, scale: 0.75 }
       }
       transition={{
-        duration: 0.8,
-        delay: isDealt ? index * 0.1 : 0,
+        duration: 0.75,
+        delay: isDealt ? index * 0.11 : 0,
         ease: [0.23, 1, 0.32, 1],
       }}
       onMouseEnter={() => isDealt && setIsFlipped(true)}
@@ -131,24 +83,24 @@ const FlipCard = ({
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
-            boxShadow: "0 25px 50px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)",
           }}
         >
           <img src={work.image} alt={work.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 55%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 55%)" }} />
           <div className="absolute top-3 left-3">
             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 text-white backdrop-blur-sm border border-white/10">
               {work.category}
             </span>
           </div>
           <div className="absolute bottom-4 left-4 right-4">
-            <h3 className="text-white font-bold text-base">{work.title}</h3>
+            <h3 className="text-white font-bold text-base leading-snug">{work.title}</h3>
           </div>
           <div className="absolute top-3 right-3">
             <motion.div
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              className="w-7 h-7 rounded-full border-2 border-white/30 flex items-center justify-center"
+              className="w-7 h-7 rounded-full border-2 border-white/20 flex items-center justify-center"
             >
               <div className="w-2 h-2 rounded-full bg-primary/80" />
             </motion.div>
@@ -157,60 +109,62 @@ const FlipCard = ({
 
         {/* BACK */}
         <div
-          className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col items-center justify-center p-6"
+          className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col items-center justify-center p-5"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            background: "linear-gradient(135deg, #0f0a05 0%, #1a0e00 50%, #0f0a05 100%)",
-            border: "1px solid rgba(255,90,0,0.3)",
-            boxShadow: "inset 0 0 60px rgba(255,90,0,0.08), 0 25px 50px rgba(0,0,0,0.6)",
+            background: "linear-gradient(135deg, #0f0a05 0%, #1c0e00 50%, #0f0a05 100%)",
+            border: "1px solid rgba(255,90,0,0.25)",
+            boxShadow: "inset 0 0 60px rgba(255,90,0,0.07), 0 20px 40px rgba(0,0,0,0.5)",
           }}
         >
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 50%, rgba(255,90,0,0.12) 0%, transparent 70%)" }} />
-          <div className="absolute inset-0 pointer-events-none opacity-20" style={{
-            backgroundImage: "linear-gradient(rgba(255,90,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.1) 1px, transparent 1px)",
-            backgroundSize: "30px 30px",
+          {/* Glow */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 50%, rgba(255,90,0,0.1) 0%, transparent 70%)" }} />
+          {/* Grid */}
+          <div className="absolute inset-0 pointer-events-none" style={{
+            backgroundImage: "linear-gradient(rgba(255,90,0,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.07) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
           }} />
 
           <motion.span
-            animate={{ opacity: isFlipped ? 1 : 0, y: isFlipped ? 0 : -10 }}
+            animate={{ opacity: isFlipped ? 1 : 0, y: isFlipped ? 0 : -8 }}
             transition={{ delay: 0.3 }}
             className="px-3 py-1 rounded-full text-xs font-semibold mb-3 border"
-            style={{ background: "rgba(255,90,0,0.15)", borderColor: "rgba(255,90,0,0.4)", color: "#ff8c42" }}
+            style={{ background: "rgba(255,90,0,0.15)", borderColor: "rgba(255,90,0,0.35)", color: "#ff8c42" }}
           >
             {work.category}
           </motion.span>
 
           <motion.h3
-            animate={{ opacity: isFlipped ? 1 : 0, y: isFlipped ? 0 : 10 }}
-            transition={{ delay: 0.35 }}
-            className="text-lg font-display font-bold text-center mb-2 text-white"
+            animate={{ opacity: isFlipped ? 1 : 0, y: isFlipped ? 0 : 8 }}
+            transition={{ delay: 0.33 }}
+            className="text-base font-display font-bold text-center mb-2 text-white leading-snug"
           >
             {work.title}
           </motion.h3>
 
           <motion.div
-            animate={{ width: isFlipped ? 60 : 0 }}
-            transition={{ delay: 0.4, duration: 0.4 }}
+            animate={{ width: isFlipped ? 50 : 0 }}
+            transition={{ delay: 0.38, duration: 0.35 }}
             className="h-px mb-3 rounded-full"
             style={{ background: "linear-gradient(to right, transparent, #ff5a00, transparent)" }}
           />
 
           <motion.p
-            animate={{ opacity: isFlipped ? 1 : 0, y: isFlipped ? 0 : 10 }}
+            animate={{ opacity: isFlipped ? 1 : 0, y: isFlipped ? 0 : 8 }}
             transition={{ delay: 0.4 }}
-            className="text-center text-xs mb-5 leading-relaxed"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="text-center text-xs mb-4 leading-relaxed"
+            style={{ color: "rgba(255,255,255,0.5)" }}
           >
             {work.desc}
           </motion.p>
 
           <motion.button
             animate={{ opacity: isFlipped ? 1 : 0, scale: isFlipped ? 1 : 0.5 }}
-            transition={{ delay: 0.45, type: "spring", stiffness: 200 }}
+            transition={{ delay: 0.44, type: "spring", stiffness: 200 }}
             className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-white"
-            style={{ background: "linear-gradient(135deg, #ff5a00, #ffaa00)", boxShadow: "0 0 20px rgba(255,90,0,0.5)" }}
+            style={{ background: "linear-gradient(135deg, #ff5a00, #ffaa00)", boxShadow: "0 0 18px rgba(255,90,0,0.45)" }}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -221,10 +175,11 @@ const FlipCard = ({
             )}
           </motion.button>
 
-          <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 rounded-tl-sm" style={{ borderColor: "rgba(255,90,0,0.4)" }} />
-          <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 rounded-tr-sm" style={{ borderColor: "rgba(255,90,0,0.4)" }} />
-          <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 rounded-bl-sm" style={{ borderColor: "rgba(255,90,0,0.4)" }} />
-          <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 rounded-br-sm" style={{ borderColor: "rgba(255,90,0,0.4)" }} />
+          {/* Corner decorations */}
+          <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2" style={{ borderColor: "rgba(255,90,0,0.35)" }} />
+          <div className="absolute top-3 right-3 w-3 h-3 border-t-2 border-r-2" style={{ borderColor: "rgba(255,90,0,0.35)" }} />
+          <div className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2" style={{ borderColor: "rgba(255,90,0,0.35)" }} />
+          <div className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2" style={{ borderColor: "rgba(255,90,0,0.35)" }} />
         </div>
       </motion.div>
     </motion.div>
@@ -236,14 +191,14 @@ const WorksSection = () => {
   const [isDealt, setIsDealt] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   useEffect(() => {
     if (isInView && !hasAnimated) {
       const timer = setTimeout(() => {
         setIsDealt(true);
         setHasAnimated(true);
-      }, 1000);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [isInView, hasAnimated]);
@@ -251,7 +206,7 @@ const WorksSection = () => {
   const handleCategoryChange = (category: string) => {
     setIsDealt(false);
     setActiveCategory(category);
-    setTimeout(() => setIsDealt(true), 200);
+    setTimeout(() => setIsDealt(true), 150);
   };
 
   const filteredWorks =
@@ -259,25 +214,59 @@ const WorksSection = () => {
       ? works
       : works.filter((work) => work.category === activeCategory);
 
-  // Grid container height based on rows
-  const totalCols = 3;
-  const rows = Math.ceil(filteredWorks.length / totalCols);
-  const cardH = 285;
-  const gapY = 24;
-  const containerHeight = rows * cardH + (rows - 1) * gapY;
-
   return (
-    <section id="works" className="py-24 md:py-32 bg-card relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
+    <section id="works" className="py-24 md:py-32 relative overflow-hidden">
+
+      {/* Rich background */}
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #0a0a0a 0%, #0f0800 50%, #0a0a0a 100%)" }} />
+
+      {/* Animated background orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.03, 0.08, 0.03] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 left-1/2 w-[600px] h-[300px] -translate-x-1/2 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(255,90,0,0.2) 0%, transparent 70%)" }}
+          animate={{ scale: [1, 1.4, 1], opacity: [0.06, 0.14, 0.06], x: [0, 30, 0] }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-3xl"
+          style={{ background: "radial-gradient(ellipse, rgba(255,90,0,0.3) 0%, transparent 70%)" }}
         />
+        <motion.div
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.04, 0.09, 0.04] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(255,60,0,0.2) 0%, transparent 70%)" }}
+        />
+        <motion.div
+          animate={{ scale: [1, 1.3, 1], opacity: [0.03, 0.07, 0.03] }}
+          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+          className="absolute bottom-0 right-0 w-80 h-80 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(255,120,0,0.15) 0%, transparent 70%)" }}
+        />
+
+        {/* Subtle grid */}
+        <div className="absolute inset-0 opacity-30" style={{
+          backgroundImage: "linear-gradient(rgba(255,90,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.04) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }} />
+
+        {/* Floating dots */}
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: Math.random() * 3 + 1,
+              height: Math.random() * 3 + 1,
+              top: `${10 + i * 8}%`,
+              left: `${5 + i * 8}%`,
+              background: i % 2 === 0 ? "rgba(255,90,0,0.4)" : "rgba(255,255,255,0.15)",
+            }}
+            animate={{ y: [0, -20, 0], opacity: [0.2, 0.6, 0.2] }}
+            transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+          />
+        ))}
       </div>
 
-      <div className="container mx-auto px-6" ref={ref}>
+      <div className="container mx-auto px-6 relative z-10" ref={ref}>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -285,12 +274,16 @@ const WorksSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <motion.span className="text-primary font-medium text-sm uppercase tracking-widest inline-block">
+          <motion.span
+            className="text-primary font-medium text-sm uppercase tracking-widest inline-block"
+            initial={{ opacity: 0, y: 10 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+          >
             Portfolio
           </motion.span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mt-2">
             My{" "}
-            <span className="text-gradient" style={{ filter: "drop-shadow(0 0 20px rgba(255,90,0,0.3))" }}>
+            <span className="text-gradient" style={{ filter: "drop-shadow(0 0 25px rgba(255,90,0,0.4))" }}>
               Recent Works
             </span>
           </h2>
@@ -299,8 +292,16 @@ const WorksSection = () => {
             initial={{ width: 0 }}
             animate={isInView ? { width: 80 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
+            style={{ boxShadow: "0 0 10px rgba(255,90,0,0.5)" }}
           />
-          <p className="text-muted-foreground text-sm mt-4">Hover over cards to flip and see details ✦</p>
+          <motion.p
+            className="text-muted-foreground text-sm mt-4"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.5 }}
+          >
+            Hover over cards to flip and see project details ✦
+          </motion.p>
         </motion.div>
 
         {/* Filter buttons */}
@@ -316,6 +317,9 @@ const WorksSection = () => {
               onClick={() => handleCategoryChange(category)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.2 + i * 0.08 }}
               className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 activeCategory === category
                   ? "bg-gradient-primary text-primary-foreground"
@@ -328,40 +332,20 @@ const WorksSection = () => {
           ))}
         </motion.div>
 
-        {/* Cards — absolute positioned for stack-to-grid animation */}
-        <div
-          style={{
-            position: "relative",
-            height: containerHeight,
-            width: "100%",
-          }}
-        >
-          <AnimatePresence>
+        {/* Cards Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence mode="popLayout">
             {filteredWorks.map((work, index) => (
               <FlipCard
                 key={work.title}
                 work={work}
                 index={index}
                 isDealt={isDealt}
-                totalCards={filteredWorks.length}
               />
             ))}
           </AnimatePresence>
         </div>
 
-        {/* Dealing label */}
-        <AnimatePresence>
-          {!isDealt && isInView && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center mt-4"
-            >
-              <span className="text-primary text-sm animate-pulse">✦ Dealing cards...</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </section>
   );
