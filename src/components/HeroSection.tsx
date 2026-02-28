@@ -281,7 +281,7 @@ const HeroSection = () => {
               transition={{ duration: 0.6, delay: 1.0 }}
               className="flex gap-8 mt-10 justify-center md:justify-start"
             >
-              {[{ num: "5+", label: "Years Exp." }, { num: "50+", label: "Projects" }, { num: "20+", label: "Clients" }].map((stat, i) => (
+              {[{ num: "2+", label: "Years Exp." }, { num: "30+", label: "Projects" }, { num: "10+", label: "Clients" }].map((stat, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -4 }}
@@ -376,7 +376,7 @@ const HeroSection = () => {
                   boxShadow: "0 4px 20px rgba(0,0,0,0.3)"
                 }}
               >
-                <span className="text-sm font-medium">⚡ 5+ Years Experience</span>
+                <span className="text-sm font-medium">⚡ 2+ Years Experience</span>
               </motion.div>
 
               <motion.div
@@ -390,7 +390,7 @@ const HeroSection = () => {
                   boxShadow: "0 4px 20px rgba(0,0,0,0.3)"
                 }}
               >
-                <span className="text-sm font-medium">🎨 50+ Projects</span>
+                <span className="text-sm font-medium">🎨 30+ Projects</span>
               </motion.div>
             </div>
           </motion.div>
