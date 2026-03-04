@@ -30,24 +30,26 @@ const NeonCanvas = () => {
   const animRef = useRef<number>();
 
   const addRipple = useCallback((x: number, y: number, isClick = false) => {
+    // Max 2 ripples at once
+    if (ripples.current.length >= 2) ripples.current.splice(0, 1);
     ripples.current.push({
       x, y,
       r: 0,
-      maxR: isClick ? 42 : 22,
-      alpha: 1,
-      speed: isClick ? 2 : 1.5,
+      maxR: isClick ? 50 : 25,
+      alpha: 0.9,
+      speed: isClick ? 2.5 : 1.8,
       rings: isClick ? 2 : 1,
     });
     if (isClick) {
       const count = 8;
       for (let i = 0; i < count; i++) {
         const angle = (i / count) * Math.PI * 2;
-        const spd = Math.random() * 1.8 + 0.8;
+        const spd = Math.random() * 1.5 + 0.8;
         particles.current.push({
           x, y,
           vx: Math.cos(angle) * spd,
           vy: Math.sin(angle) * spd,
-          alpha: 0.7,
+          alpha: 0.8,
           size: Math.random() * 1.2 + 0.4,
           color: Math.random() > 0.5 ? [255, 90, 0] : [255, 180, 0],
           trail: [] as {x:number,y:number}[],
@@ -77,45 +79,45 @@ const NeonCanvas = () => {
       for (let i = ripples.current.length - 1; i >= 0; i--) {
         const rp = ripples.current[i];
         rp.r += rp.speed;
-        rp.alpha = Math.pow(1 - rp.r / rp.maxR, 1.8);
-        if (rp.alpha <= 0.002) { ripples.current.splice(i, 1); continue; }
+        rp.alpha -= 0.055; // Fast fade
+        if (rp.alpha <= 0) { ripples.current.splice(i, 1); continue; }
 
         for (let ring = 0; ring < rp.rings; ring++) {
-          const ringR = rp.r - ring * 12;
+          const ringR = rp.r - ring * 14;
           if (ringR < 0) continue;
           const ra = rp.alpha * (1 - ring / rp.rings);
 
           // Outer soft glow
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,90,0,${ra * 0.07})`;
+          ctx.strokeStyle = `rgba(255,90,0,${ra * 0.08})`;
           ctx.lineWidth = 5;
           ctx.stroke();
 
           // Mid glow
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,130,0,${ra * 0.2})`;
-          ctx.lineWidth = 1.8;
+          ctx.strokeStyle = `rgba(255,130,0,${ra * 0.25})`;
+          ctx.lineWidth = 1.5;
           ctx.stroke();
 
           // Sharp neon core
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,210,80,${ra * 0.75})`;
+          ctx.strokeStyle = `rgba(255,210,80,${ra * 0.8})`;
           ctx.lineWidth = 0.7;
           ctx.stroke();
         }
 
         // Tiny center flash
-        if (rp.r < 12) {
-          const ia = 1 - rp.r / 12;
-          const ig = ctx.createRadialGradient(rp.x, rp.y, 0, rp.x, rp.y, 8);
-          ig.addColorStop(0, `rgba(255,220,100,${ia * 0.5})`);
+        if (rp.r < 15) {
+          const ia = (1 - rp.r / 15) * rp.alpha;
+          const ig = ctx.createRadialGradient(rp.x, rp.y, 0, rp.x, rp.y, 10);
+          ig.addColorStop(0, `rgba(255,220,100,${ia * 0.6})`);
           ig.addColorStop(1, 'transparent');
           ctx.fillStyle = ig;
           ctx.beginPath();
-          ctx.arc(rp.x, rp.y, 8, 0, Math.PI * 2);
+          ctx.arc(rp.x, rp.y, 10, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -124,11 +126,11 @@ const NeonCanvas = () => {
       for (let i = particles.current.length - 1; i >= 0; i--) {
         const p = particles.current[i];
         p.trail.push({ x: p.x, y: p.y });
-        if (p.trail.length > 6) p.trail.shift();
+        if (p.trail.length > 5) p.trail.shift();
         p.x += p.vx; p.y += p.vy;
-        p.vx *= 0.93; p.vy *= 0.93;
-        p.vy += 0.05;
-        p.alpha -= 0.03;
+        p.vx *= 0.92; p.vy *= 0.92;
+        p.vy += 0.04;
+        p.alpha -= 0.035;
         if (p.alpha <= 0) { particles.current.splice(i, 1); continue; }
 
         // Trail
@@ -162,18 +164,9 @@ const NeonCanvas = () => {
 
     const section = canvas.parentElement!;
 
-    const onMouseMove = (e: MouseEvent) => {
-      const r = canvas.getBoundingClientRect();
-      if (Math.random() > 0.97) addRipple(e.clientX - r.left, e.clientY - r.top, false);
-    };
     const onMouseClick = (e: MouseEvent) => {
       const r = canvas.getBoundingClientRect();
       addRipple(e.clientX - r.left, e.clientY - r.top, true);
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      const t = e.touches[0];
-      const r = canvas.getBoundingClientRect();
-      if (Math.random() > 0.97) addRipple(t.clientX - r.left, t.clientY - r.top, false);
     };
     const onTouchStart = (e: TouchEvent) => {
       const t = e.touches[0];
@@ -181,9 +174,7 @@ const NeonCanvas = () => {
       addRipple(t.clientX - r.left, t.clientY - r.top, true);
     };
 
-    section.addEventListener('mousemove', onMouseMove);
     section.addEventListener('click', onMouseClick);
-    section.addEventListener('touchmove', onTouchMove);
     section.addEventListener('touchstart', onTouchStart);
     window.addEventListener('resize', resize);
 
@@ -191,9 +182,7 @@ const NeonCanvas = () => {
     loop();
 
     return () => {
-      section.removeEventListener('mousemove', onMouseMove);
       section.removeEventListener('click', onMouseClick);
-      section.removeEventListener('touchmove', onTouchMove);
       section.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('resize', resize);
       if (animRef.current) cancelAnimationFrame(animRef.current);
@@ -234,7 +223,6 @@ const HeroSection = () => {
   return (
     <section id="home" ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
 
-      {/* Mouse cursor glow */}
       <motion.div
         className="fixed pointer-events-none z-50 rounded-full"
         style={{
@@ -245,12 +233,10 @@ const HeroSection = () => {
         }}
       />
 
-      {/* Parallax Background */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-gradient-dark" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(15,10,5,0) 0%, rgba(10,5,0,0.8) 100%)" }} />
 
-        {/* Stars */}
         {STARS.map((star) => (
           <motion.div
             key={star.id}
@@ -261,7 +247,6 @@ const HeroSection = () => {
           />
         ))}
 
-        {/* Shooting stars */}
         {SHOOTING_STARS.map((s) => (
           <motion.div
             key={s.id}
@@ -272,18 +257,13 @@ const HeroSection = () => {
           />
         ))}
 
-        {/* Grid overlay */}
         <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(rgba(255,90,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
       </motion.div>
 
-      {/* Neon touch effect */}
       <NeonCanvas />
 
-      {/* Main content */}
       <motion.div className="container mx-auto px-6 relative z-10" style={{ y: contentY, opacity }}>
         <div className="grid md:grid-cols-2 gap-12 items-center">
-
-          {/* Left Content */}
           <div className="text-center md:text-left order-2 md:order-1">
             <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
               <span className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
@@ -336,7 +316,6 @@ const HeroSection = () => {
             </motion.div>
           </div>
 
-          {/* Right - Photo */}
           <motion.div initial={{ opacity: 0, scale: 0.8, x: 50 }} animate={{ opacity: 1, scale: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.3, type: "spring" }} className="order-1 md:order-2 flex justify-center">
             <div className="relative">
               <motion.div className="absolute -inset-6 rounded-full" animate={{ opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} style={{ background: "radial-gradient(circle, rgba(255,90,0,0.15) 0%, transparent 70%)" }} />
@@ -362,7 +341,6 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 1.4 }} className="absolute bottom-10 left-1/2 -translate-x-1/2">
           <motion.a href="#about" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors" whileHover={{ y: -3 }}>
             <span className="text-xs tracking-widest uppercase">Scroll Down</span>
