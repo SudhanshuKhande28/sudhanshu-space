@@ -3,7 +3,7 @@ import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import sudhanshuPhoto from "@/assets/sudhanshu-photo.jpg";
 import { useTypewriter } from "@/hooks/useTypewriter";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 const STARS = Array.from({ length: 80 }, (_, i) => ({
   id: i,
@@ -23,7 +23,6 @@ const SHOOTING_STARS = Array.from({ length: 5 }, (_, i) => ({
   duration: Math.random() * 1.5 + 1,
 }));
 
-// Neon touch canvas
 const NeonCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ripples = useRef<any[]>([]);
@@ -34,23 +33,22 @@ const NeonCanvas = () => {
     ripples.current.push({
       x, y,
       r: 0,
-      maxR: isClick ? 90 : 55,
+      maxR: isClick ? 42 : 22,
       alpha: 1,
-      speed: isClick ? 3 : 2,
-      rings: isClick ? 3 : 2,
+      speed: isClick ? 2 : 1.5,
+      rings: isClick ? 2 : 1,
     });
-    // Scatter particles on click — fewer and smaller
     if (isClick) {
-      const count = 10;
+      const count = 8;
       for (let i = 0; i < count; i++) {
         const angle = (i / count) * Math.PI * 2;
-        const spd = Math.random() * 2.5 + 1;
+        const spd = Math.random() * 1.8 + 0.8;
         particles.current.push({
           x, y,
           vx: Math.cos(angle) * spd,
           vy: Math.sin(angle) * spd,
-          alpha: 0.8,
-          size: Math.random() * 1.5 + 0.5,
+          alpha: 0.7,
+          size: Math.random() * 1.2 + 0.4,
           color: Math.random() > 0.5 ? [255, 90, 0] : [255, 180, 0],
           trail: [] as {x:number,y:number}[],
         });
@@ -75,16 +73,15 @@ const NeonCanvas = () => {
     function loop() {
       ctx.clearRect(0, 0, W, H);
 
-      // Draw ripples
+      // Ripples
       for (let i = ripples.current.length - 1; i >= 0; i--) {
         const rp = ripples.current[i];
         rp.r += rp.speed;
-        rp.speed *= 0.997;
-        rp.alpha = Math.pow(1 - rp.r / rp.maxR, 1.6);
+        rp.alpha = Math.pow(1 - rp.r / rp.maxR, 1.8);
         if (rp.alpha <= 0.002) { ripples.current.splice(i, 1); continue; }
 
         for (let ring = 0; ring < rp.rings; ring++) {
-          const ringR = rp.r - ring * 18;
+          const ringR = rp.r - ring * 12;
           if (ringR < 0) continue;
           const ra = rp.alpha * (1 - ring / rp.rings);
 
@@ -92,51 +89,51 @@ const NeonCanvas = () => {
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
           ctx.strokeStyle = `rgba(255,90,0,${ra * 0.07})`;
-          ctx.lineWidth = 6;
+          ctx.lineWidth = 5;
           ctx.stroke();
 
           // Mid glow
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,120,0,${ra * 0.2})`;
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = `rgba(255,130,0,${ra * 0.2})`;
+          ctx.lineWidth = 1.8;
           ctx.stroke();
 
           // Sharp neon core
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,200,80,${ra * 0.7})`;
-          ctx.lineWidth = 0.8;
+          ctx.strokeStyle = `rgba(255,210,80,${ra * 0.75})`;
+          ctx.lineWidth = 0.7;
           ctx.stroke();
         }
 
-        // Center impact flash — small and subtle
-        if (rp.r < 20) {
-          const ia = 1 - rp.r / 20;
-          const ig = ctx.createRadialGradient(rp.x, rp.y, 0, rp.x, rp.y, 12);
+        // Tiny center flash
+        if (rp.r < 12) {
+          const ia = 1 - rp.r / 12;
+          const ig = ctx.createRadialGradient(rp.x, rp.y, 0, rp.x, rp.y, 8);
           ig.addColorStop(0, `rgba(255,220,100,${ia * 0.5})`);
           ig.addColorStop(1, 'transparent');
           ctx.fillStyle = ig;
           ctx.beginPath();
-          ctx.arc(rp.x, rp.y, 12, 0, Math.PI * 2);
+          ctx.arc(rp.x, rp.y, 8, 0, Math.PI * 2);
           ctx.fill();
         }
       }
 
-      // Draw particles
+      // Particles
       for (let i = particles.current.length - 1; i >= 0; i--) {
         const p = particles.current[i];
         p.trail.push({ x: p.x, y: p.y });
-        if (p.trail.length > 8) p.trail.shift();
+        if (p.trail.length > 6) p.trail.shift();
         p.x += p.vx; p.y += p.vy;
-        p.vx *= 0.94; p.vy *= 0.94;
-        p.vy += 0.08; // gravity
-        p.alpha -= 0.025;
+        p.vx *= 0.93; p.vy *= 0.93;
+        p.vy += 0.05;
+        p.alpha -= 0.03;
         if (p.alpha <= 0) { particles.current.splice(i, 1); continue; }
 
         // Trail
         for (let t = 0; t < p.trail.length - 1; t++) {
-          const ta = (t / p.trail.length) * p.alpha * 0.5;
+          const ta = (t / p.trail.length) * p.alpha * 0.4;
           ctx.beginPath();
           ctx.moveTo(p.trail[t].x, p.trail[t].y);
           ctx.lineTo(p.trail[t + 1].x, p.trail[t + 1].y);
@@ -145,13 +142,13 @@ const NeonCanvas = () => {
           ctx.stroke();
         }
 
-        // Core particle with glow
-        const pg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
+        // Particle glow
+        const pg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2.5);
         pg.addColorStop(0, `rgba(${p.color[0]},${p.color[1]},${p.color[2]},${p.alpha})`);
         pg.addColorStop(1, `rgba(${p.color[0]},${p.color[1]},${p.color[2]},0)`);
         ctx.fillStyle = pg;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.beginPath();
@@ -165,20 +162,24 @@ const NeonCanvas = () => {
 
     const section = canvas.parentElement!;
 
-    const onMove = (x: number, y: number) => {
+    const onMouseMove = (e: MouseEvent) => {
       const r = canvas.getBoundingClientRect();
-      if (Math.random() > 0.92) addRipple(x - r.left, y - r.top, false);
+      if (Math.random() > 0.97) addRipple(e.clientX - r.left, e.clientY - r.top, false);
     };
-
-    const onClick = (x: number, y: number) => {
+    const onMouseClick = (e: MouseEvent) => {
       const r = canvas.getBoundingClientRect();
-      addRipple(x - r.left, y - r.top, true);
+      addRipple(e.clientX - r.left, e.clientY - r.top, true);
     };
-
-    const onMouseMove = (e: MouseEvent) => onMove(e.clientX, e.clientY);
-    const onMouseClick = (e: MouseEvent) => onClick(e.clientX, e.clientY);
-    const onTouchMove = (e: TouchEvent) => { const t = e.touches[0]; onMove(t.clientX, t.clientY); };
-    const onTouchStart = (e: TouchEvent) => { const t = e.touches[0]; onClick(t.clientX, t.clientY); };
+    const onTouchMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      const r = canvas.getBoundingClientRect();
+      if (Math.random() > 0.97) addRipple(t.clientX - r.left, t.clientY - r.top, false);
+    };
+    const onTouchStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      const r = canvas.getBoundingClientRect();
+      addRipple(t.clientX - r.left, t.clientY - r.top, true);
+    };
 
     section.addEventListener('mousemove', onMouseMove);
     section.addEventListener('click', onMouseClick);
@@ -249,6 +250,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-dark" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(15,10,5,0) 0%, rgba(10,5,0,0.8) 100%)" }} />
 
+        {/* Stars */}
         {STARS.map((star) => (
           <motion.div
             key={star.id}
@@ -259,6 +261,7 @@ const HeroSection = () => {
           />
         ))}
 
+        {/* Shooting stars */}
         {SHOOTING_STARS.map((s) => (
           <motion.div
             key={s.id}
@@ -269,14 +272,11 @@ const HeroSection = () => {
           />
         ))}
 
-        <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.08, 0.18, 0.08], x: [0, 30, 0], y: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl" style={{ background: "radial-gradient(circle, rgba(255,90,0,0.3) 0%, transparent 70%)" }} />
-        <motion.div animate={{ scale: [1.2, 1, 1.2], opacity: [0.05, 0.12, 0.05], x: [0, -20, 0] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }} className="absolute bottom-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, rgba(255,60,0,0.2) 0%, transparent 70%)" }} />
-        <motion.div animate={{ scale: [1, 1.4, 1], opacity: [0.03, 0.1, 0.03] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }} className="absolute top-1/2 left-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, rgba(255,100,20,0.1) 0%, transparent 70%)" }} />
-
+        {/* Grid overlay */}
         <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(rgba(255,90,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,0,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
       </motion.div>
 
-      {/* 🔥 NEON ORANGE TOUCH EFFECT */}
+      {/* Neon touch effect */}
       <NeonCanvas />
 
       {/* Main content */}
