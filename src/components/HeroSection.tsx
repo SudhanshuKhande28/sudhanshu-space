@@ -31,27 +31,26 @@ const NeonCanvas = () => {
   const animRef = useRef<number>();
 
   const addRipple = useCallback((x: number, y: number, isClick = false) => {
-    const strength = isClick ? 1.2 : 0.5;
     ripples.current.push({
       x, y,
       r: 0,
-      maxR: (isClick ? 220 : 120) * strength,
+      maxR: isClick ? 90 : 55,
       alpha: 1,
-      speed: isClick ? 5 : 3,
-      rings: isClick ? 4 : 2,
+      speed: isClick ? 3 : 2,
+      rings: isClick ? 3 : 2,
     });
-    // Scatter particles on click
+    // Scatter particles on click — fewer and smaller
     if (isClick) {
-      const count = 18;
+      const count = 10;
       for (let i = 0; i < count; i++) {
         const angle = (i / count) * Math.PI * 2;
-        const spd = Math.random() * 4 + 2;
+        const spd = Math.random() * 2.5 + 1;
         particles.current.push({
           x, y,
           vx: Math.cos(angle) * spd,
           vy: Math.sin(angle) * spd,
-          alpha: 1,
-          size: Math.random() * 3 + 1,
+          alpha: 0.8,
+          size: Math.random() * 1.5 + 0.5,
           color: Math.random() > 0.5 ? [255, 90, 0] : [255, 180, 0],
           trail: [] as {x:number,y:number}[],
         });
@@ -92,35 +91,34 @@ const NeonCanvas = () => {
           // Outer soft glow
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,90,0,${ra * 0.12})`;
-          ctx.lineWidth = 14;
+          ctx.strokeStyle = `rgba(255,90,0,${ra * 0.07})`;
+          ctx.lineWidth = 6;
           ctx.stroke();
 
           // Mid glow
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,120,0,${ra * 0.35})`;
-          ctx.lineWidth = 4;
+          ctx.strokeStyle = `rgba(255,120,0,${ra * 0.2})`;
+          ctx.lineWidth = 2;
           ctx.stroke();
 
           // Sharp neon core
           ctx.beginPath();
           ctx.arc(rp.x, rp.y, ringR, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,200,80,${ra * 0.9})`;
-          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = `rgba(255,200,80,${ra * 0.7})`;
+          ctx.lineWidth = 0.8;
           ctx.stroke();
         }
 
-        // Center impact flash
-        if (rp.r < 40) {
-          const ia = 1 - rp.r / 40;
-          const ig = ctx.createRadialGradient(rp.x, rp.y, 0, rp.x, rp.y, 30 * ia);
-          ig.addColorStop(0, `rgba(255,220,100,${ia * 0.7})`);
-          ig.addColorStop(0.5, `rgba(255,90,0,${ia * 0.3})`);
+        // Center impact flash — small and subtle
+        if (rp.r < 20) {
+          const ia = 1 - rp.r / 20;
+          const ig = ctx.createRadialGradient(rp.x, rp.y, 0, rp.x, rp.y, 12);
+          ig.addColorStop(0, `rgba(255,220,100,${ia * 0.5})`);
           ig.addColorStop(1, 'transparent');
           ctx.fillStyle = ig;
           ctx.beginPath();
-          ctx.arc(rp.x, rp.y, 30, 0, Math.PI * 2);
+          ctx.arc(rp.x, rp.y, 12, 0, Math.PI * 2);
           ctx.fill();
         }
       }
