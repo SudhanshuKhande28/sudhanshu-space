@@ -26,7 +26,7 @@ const experiences = [
 const education = [
   {
     title: "B.E in Information Technology",
-    institution: "Pune University",
+    institution: "SGBAU",
     period: "2019 - 2023",
     description: "Studied core computer science subjects including networking, software engineering, and multimedia systems.",
   },
