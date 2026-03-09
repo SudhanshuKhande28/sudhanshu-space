@@ -8,13 +8,6 @@ const stats = [
   { value: "10+", label: "Happy Clients" },
 ];
 
-const tools = [
-  { name: "Photoshop", icon: "🎨", level: 90 },
-  { name: "Premiere Pro", icon: "🎬", level: 88 },
-  { name: "After Effects", icon: "✨", level: 82 },
-  { name: "Illustrator", icon: "🖊️", level: 85 },
-];
-
 const funFacts = [
   { icon: "🌍", label: "Based in", value: "Pune, India" },
   { icon: "🎓", label: "Education", value: "Design Graduate" },
@@ -32,7 +25,6 @@ const hobbies = [
 const AboutSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [hoveredTool, setHoveredTool] = useState<number | null>(null);
 
   return (
     <section id="about" className="py-24 md:py-32 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #0a0500 0%, #050200 50%, #0a0500 100%)" }}>
@@ -61,7 +53,6 @@ const AboutSection = () => {
           <h2 className="text-4xl md:text-6xl font-display font-bold mt-3">
             About <span className="text-gradient">Me</span>
           </h2>
-          {/* Decorative line */}
           <motion.div
             initial={{ width: 0 }}
             animate={isInView ? { width: "80px" } : {}}
@@ -81,17 +72,17 @@ const AboutSection = () => {
           >
             {/* Photo with neon border */}
             <div className="relative group">
-              {/* Animated neon glow rings */}
+              {/* Animated neon glow */}
               <motion.div
                 animate={{ opacity: [0.4, 0.9, 0.4], scale: [1, 1.03, 1] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -inset-1 rounded-2xl pointer-events-none"
-                style={{ background: "linear-gradient(135deg, #ff5a00, #ffaa00, #ff2200, #ff8c00)", padding: "2px", borderRadius: "18px", filter: "blur(1px)" }}
+                className="absolute -inset-1 rounded-2xl pointer-events-none blur-sm"
+                style={{ background: "linear-gradient(135deg, #ff5a00, #ffaa00, #ff2200, #ff8c00)" }}
               />
               <motion.div
                 animate={{ opacity: [0.2, 0.6, 0.2] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-                className="absolute -inset-3 rounded-2xl pointer-events-none blur-md"
+                className="absolute -inset-3 rounded-2xl pointer-events-none blur-xl"
                 style={{ background: "linear-gradient(135deg, rgba(255,90,0,0.4), rgba(255,170,0,0.4))" }}
               />
               {/* Corner tech decorations */}
@@ -121,7 +112,6 @@ const AboutSection = () => {
                   className="absolute inset-x-0 h-12 pointer-events-none"
                   style={{ background: "linear-gradient(to bottom, transparent, rgba(255,90,0,0.08), transparent)" }}
                 />
-                {/* Dark overlay at bottom */}
                 <div className="absolute inset-x-0 bottom-0 h-16 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5), transparent)" }} />
               </motion.div>
             </div>
@@ -212,61 +202,58 @@ const AboutSection = () => {
               ))}
             </div>
 
-            {/* Tools */}
-            <div>
-              <motion.h4
-                initial={{ opacity: 0 }}
-                animate={isInView ? { opacity: 1 } : {}}
-                transition={{ delay: 0.8 }}
-                className="text-xs uppercase tracking-[4px] text-primary mb-4"
+            {/* Personal Quote */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.9 }}
+              className="relative p-6 rounded-2xl border border-primary/20 overflow-hidden cursor-default"
+              style={{ background: "rgba(255,90,0,0.04)", backdropFilter: "blur(10px)" }}
+            >
+              {/* Animated background glow */}
+              <motion.div
+                animate={{ opacity: [0.03, 0.08, 0.03], scale: [1, 1.1, 1] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: "radial-gradient(circle at 30% 50%, rgba(255,90,0,0.3), transparent 70%)" }}
+              />
+              {/* Big quote mark */}
+              <div
+                className="absolute -top-2 -left-1 font-display font-bold leading-none pointer-events-none select-none"
+                style={{ fontSize: "100px", color: "rgba(255,90,0,0.08)", lineHeight: 1 }}
               >
-                — Tools & Software
-              </motion.h4>
-              <div className="flex flex-col gap-3">
-                {tools.map((tool, i) => (
-                  <motion.div
-                    key={tool.name}
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.9 + i * 0.1 }}
-                    onHoverStart={() => setHoveredTool(i)}
-                    onHoverEnd={() => setHoveredTool(null)}
-                    className="cursor-default"
-                  >
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium flex items-center gap-2">
-                        <span>{tool.icon}</span> {tool.name}
-                      </span>
-                      <span className="text-xs text-primary font-mono">{tool.level}%</span>
-                    </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={isInView ? { width: `${tool.level}%` } : {}}
-                        transition={{ duration: 1.2, delay: 1 + i * 0.15, ease: "easeOut" }}
-                        className="h-full rounded-full relative"
-                        style={{ background: "linear-gradient(to right, #ff5a00, #ffaa00)" }}
-                      >
-                        {/* Animated shimmer */}
-                        <motion.div
-                          animate={{ x: ["-100%", "200%"] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
-                          className="absolute inset-0"
-                          style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent)", skewX: "-20deg" }}
-                        />
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                ))}
+                "
               </div>
-            </div>
+              <div className="relative z-10">
+                <motion.p
+                  className="text-lg md:text-xl font-display font-medium leading-relaxed"
+                  style={{ color: "rgba(255,255,255,0.9)" }}
+                >
+                  I don't just{" "}
+                  <span className="text-gradient font-bold">design</span>
+                  ,{" "}
+                  <br className="hidden md:block" />
+                  I tell{" "}
+                  <span className="text-gradient font-bold">stories</span>
+                  .
+                </motion.p>
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={isInView ? { width: "48px" } : {}}
+                  transition={{ duration: 0.8, delay: 1.2 }}
+                  className="h-px mt-4 mb-3"
+                  style={{ background: "linear-gradient(to right, #ff5a00, transparent)" }}
+                />
+                <p className="text-xs text-muted-foreground tracking-[3px] uppercase">— Sudhanshu Khande</p>
+              </div>
+            </motion.div>
 
             {/* Hobbies */}
             <div>
               <motion.h4
                 initial={{ opacity: 0 }}
                 animate={isInView ? { opacity: 1 } : {}}
-                transition={{ delay: 1.2 }}
+                transition={{ delay: 1.1 }}
                 className="text-xs uppercase tracking-[4px] text-primary mb-4"
               >
                 — Interests & Hobbies
@@ -277,7 +264,7 @@ const AboutSection = () => {
                     key={hobby.label}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 1.3 + i * 0.1, type: "spring" }}
+                    transition={{ delay: 1.2 + i * 0.1, type: "spring" }}
                     whileHover={{ scale: 1.1, y: -3, boxShadow: "0 0 20px rgba(255,90,0,0.3)" }}
                     className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 cursor-default transition-all duration-300"
                     style={{ background: "rgba(255,90,0,0.06)" }}
